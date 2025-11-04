@@ -9,7 +9,8 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: 'airbb-cxb3caa5e6g3hjg6'  # Your exact app name
+  AZURE_WEBAPP_NAME: 'AirBB'  # Your exact app name in Schoolproject resource group
+  AZURE_RESOURCE_GROUP: 'Schoolproject'
   DOTNET_VERSION: '9.0.x'
 
 jobs:
@@ -50,6 +51,11 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: .net-app
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
         
     - name: Deploy to Azure Web App
       id: deploy-to-webapp
