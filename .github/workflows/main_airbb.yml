@@ -31,7 +31,7 @@ jobs:
         
     - name: dotnet publish
       run: |
-        dotnet publish -c Release -o publish
+        dotnet publish -c Release -p:PublishDir=./publish
         
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v4
@@ -51,11 +51,6 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: .net-app
-
-    - name: Login to Azure
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
         
     - name: Deploy to Azure Web App
       id: deploy-to-webapp
