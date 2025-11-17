@@ -49,8 +49,9 @@
                                         <td>@nights</td>
                                         <td><strong>$@totalCost</strong></td>
                                         <td>
-                                            <form asp-action="Cancel" method="post" class="d-inline">
+                                            <form asp-action="CancelReservation" method="post" class="d-inline">
                                                 <input type="hidden" name="reservationId" value="@reservation.ReservationId" />
+                                                <input type="hidden" name="residenceId" value="@reservation.ResidenceId" />
                                                 <button type="submit" class="btn btn-danger btn-sm" 
                                                         onclick="return confirm('Are you sure you want to cancel this reservation?')">
                                                     Cancel

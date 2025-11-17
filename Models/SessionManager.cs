@@ -32,13 +32,15 @@ namespace AirBB.Models
         public FilterCriteria GetFilterCriteria()
         {
             var json = _session.GetString(FILTER_KEY);
-            return json == null ? new FilterCriteria() 
+            Console.WriteLine($"SessionManager.GetFilterCriteria - JSON from session: {json ?? "null"}");
+            return json == null ? new FilterCriteria()
                 : JsonSerializer.Deserialize<FilterCriteria>(json) ?? new FilterCriteria();
         }
 
         public void SetFilterCriteria(FilterCriteria criteria)
         {
             var json = JsonSerializer.Serialize(criteria);
+            Console.WriteLine($"SessionManager.SetFilterCriteria - Storing JSON: {json}");
             _session.SetString(FILTER_KEY, json);
         }
 

@@ -1,26 +1,40 @@
 @{
-    Layout = "_AdminLayout";
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<div class="container">
-    <h1 class="display-4">Admin Dashboard</h1>
-    <p class="lead">Welcome to the AirBB administration panel.</p>
+<div class="container-fluid">
+    <h1 class="h2">Admin Dashboard</h1>
     
     <div class="row mt-4">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Site Management</h5>
-                    <p class="card-text">Manage residences, experiences, and services.</p>
+                <div class="card-body text-center">
+                    <i class="fas fa-home fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Manage Residences</h5>
+                    <p class="card-text">Add, edit, or remove residences</p>
+                    <a asp-controller="Residences" asp-action="Index" class="btn btn-primary">Manage</a>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        
+        <div class="col-md-4">
             <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">User Management</h5>
-                    <p class="card-text">Manage clients and administrators.</p>
+                <div class="card-body text-center">
+                    <i class="fas fa-map-marker-alt fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">Manage Locations</h5>
+                    <p class="card-text">Manage available locations</p>
+                    <a asp-controller="Locations" asp-action="Index" class="btn btn-success">Manage</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-3x text-info mb-3"></i>
+                    <h5 class="card-title">Manage Users</h5>
+                    <p class="card-text">Manage users and permissions</p>
+                    <a asp-controller="Users" asp-action="Index" class="btn btn-info">Manage</a>
                 </div>
             </div>
         </div>

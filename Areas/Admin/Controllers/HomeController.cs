@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using AirBB.Models;
 
 namespace AirBB.Areas.Admin.Controllers
 {

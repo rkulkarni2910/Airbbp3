@@ -9,8 +9,8 @@
                 <form method="post" asp-action="Filter">
                     <div class="mb-3">
                         <label class="form-label">Where</label>
-                        <select class="form-select" asp-for="FilterCriteria.LocationId" asp-items="@(new SelectList(Model.Locations, "LocationId", "Name", Model.FilterCriteria.LocationId))">
-                            <option value="">All Locations</option>
+                        <select class="form-select" asp-for="FilterCriteria.LocationId" asp-items="@(new SelectList(Model.Locations, "LocationId", "Name"))">
+                            <option value="0">All Locations</option>
                         </select>
                     </div>
                     
@@ -18,13 +18,16 @@
                         <label class="form-label">When</label>
                         <input type="text" class="form-control" id="dateRange" name="dateRange" 
                                placeholder="Select dates" readonly>
-                        <input type="hidden" asp-for="FilterCriteria.CheckInDate" id="checkInDate" />
-                        <input type="hidden" asp-for="FilterCriteria.CheckOutDate" id="checkOutDate" />
+                           <input type="hidden" asp-for="FilterCriteria.CheckInDate" id="checkInDate" 
+                               value="@(Model.FilterCriteria?.CheckInDate.HasValue == true ? Model.FilterCriteria.CheckInDate.Value.ToString("yyyy-MM-dd") : "")" />
+                        <input type="hidden" name="FilterCriteria.CheckOutDate" id="checkOutDate"
+                                   value="@(Model.FilterCriteria?.CheckOutDate.HasValue == true ? Model.FilterCriteria.CheckOutDate.Value.ToString("yyyy-MM-dd") : "")" />
                     </div>
                     
                     <div class="mb-3">
                         <label class="form-label">Who</label>
-                        <input type="number" class="form-control" asp-for="FilterCriteria.GuestNumber" min="1" max="20" value="@(Model.FilterCriteria.GuestNumber ?? 1)">
+                        <input type="number" class="form-control" name="FilterCriteria.GuestNumber" min="1" max="20" 
+                               value="@(Model.FilterCriteria?.GuestNumber ?? 1)">
                     </div>
                     
                     <button type="submit" class="btn btn-primary w-100">Search</button>
@@ -94,18 +97,36 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
+            var checkInDate = $('#checkInDate').val();
+            var checkOutDate = $('#checkOutDate').val();
+            var startDate = moment().add(1, 'days');
+            var endDate = moment().add(3, 'days');
+
+            // If we have saved dates, use them
+            if (checkInDate) {
+                startDate = moment(checkInDate);
+            }
+            if (checkOutDate) {
+                endDate = moment(checkOutDate);
+            }
+
             // Initialize date range picker
             $('#dateRange').daterangepicker({
                 opens: 'left',
-                startDate: moment().add(1, 'days'),
-                endDate: moment().add(3, 'days'),
+                startDate: startDate,
+                endDate: endDate,
                 minDate: moment().add(1, 'days'),
-                autoUpdateInput: false,
+                autoUpdateInput: checkInDate ? true : false, // Auto-update if we have saved dates
                 locale: {
                     cancelLabel: 'Clear',
                     format: 'MM/DD/YYYY'
                 }
             });
+
+            // Display the date range if we have saved dates
+            if (checkInDate && checkOutDate) {
+                $('#dateRange').val(moment(checkInDate).format('MM/DD/YYYY') + ' - ' + moment(checkOutDate).format('MM/DD/YYYY'));
+            }
 
             // Update the display and hidden fields when dates are selected
             $('#dateRange').on('apply.daterangepicker', function(ev, picker) {

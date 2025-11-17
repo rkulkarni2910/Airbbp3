@@ -1,0 +1,46 @@
+@model Location
+
+@{
+    ViewData["Title"] = "Edit Location";
+}
+
+<h1>Edit Location</h1>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        <strong>Please fix the following errors:</strong>
+        <div>@TempData["ErrorMessage"]</div>
+    </div>
+}
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <strong>Please fix the following errors:</strong>
+        <div asp-validation-summary="All" class="text-danger"></div>
+    </div>
+}
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="LocationId" />
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

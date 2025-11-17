@@ -1,0 +1,85 @@
+@model User
+@using AirBB.Models
+
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<h1>Edit User</h1>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        <strong>Please fix the following errors:</strong>
+        <div>@TempData["ErrorMessage"]</div>
+    </div>
+}
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <strong>Please fix the following errors:</strong>
+        <div asp-validation-summary="All" class="text-danger"></div>
+    </div>
+}
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="UserId" />
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="PhoneNumber" class="form-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="SSN" class="form-label"></label>
+                <input asp-for="SSN" class="form-control" placeholder="123-45-6789" />
+                <span asp-validation-for="SSN" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="UserType" class="form-label"></label>
+                <select asp-for="UserType" class="form-control" asp-items="Html.GetEnumSelectList<UserType>()">
+                    <option value="">-- Select User Type --</option>
+                </select>
+                <span asp-validation-for="UserType" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="DOB" class="form-label"></label>
+                <input asp-for="DOB" class="form-control" type="date" />
+                <span asp-validation-for="DOB" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-info">
+        <strong>Note:</strong> Either Phone Number or Email must be provided as a means of contact.
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

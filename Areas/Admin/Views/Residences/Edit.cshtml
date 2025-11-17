@@ -1,0 +1,102 @@
+@model Residence
+@using AirBB.Models
+
+@{
+    ViewData["Title"] = "Edit Residence";
+}
+
+<h1>Edit Residence</h1>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        <strong>Please fix the following errors:</strong>
+        <div>@TempData["ErrorMessage"]</div>
+    </div>
+}
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <strong>Please fix the following errors:</strong>
+        <div asp-validation-summary="All" class="text-danger"></div>
+    </div>
+}
+
+<form asp-area="Admin" asp-controller="Residences" asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="ResidenceId" />
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="LocationId" class="form-label"></label>
+                <select asp-for="LocationId" class="form-control" asp-items="@(new SelectList(ViewBag.Locations, "LocationId", "Name"))">
+                    <option value="">-- Select Location --</option>
+                </select>
+                <span asp-validation-for="LocationId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="OwnerId" class="form-label"></label>
+                <select asp-for="OwnerId" class="form-control" asp-items="@(new SelectList(ViewBag.Owners, "UserId", "Name"))">
+                    <option value="">-- Select Owner --</option>
+                </select>
+                <span asp-validation-for="OwnerId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="GuestNumber" class="form-label"></label>
+                <input asp-for="GuestNumber" class="form-control" type="number" />
+                <span asp-validation-for="GuestNumber" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="BedroomNumber" class="form-label"></label>
+                <input asp-for="BedroomNumber" class="form-control" type="number" />
+                <span asp-validation-for="BedroomNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="BathroomNumber" class="form-label"></label>
+                <input asp-for="BathroomNumber" class="form-control" type="number" step="0.5" />
+                <span asp-validation-for="BathroomNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="BuiltYear" class="form-label"></label>
+                <input asp-for="BuiltYear" class="form-control" type="number" />
+                <span asp-validation-for="BuiltYear" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="PricePerNight" class="form-label"></label>
+                <input asp-for="PricePerNight" class="form-control" type="number" step="0.01" />
+                <span asp-validation-for="PricePerNight" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="ResidencePicture" class="form-label"></label>
+        <input asp-for="ResidencePicture" class="form-control" />
+        <span asp-validation-for="ResidencePicture" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

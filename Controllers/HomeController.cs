@@ -22,6 +22,7 @@ namespace AirBB.Controllers
             var filterCriteria = _sessionManager.GetFilterCriteria();
             var locations = await _context.Locations.ToListAsync();
             var residences = await FilterResidences(filterCriteria);
+    Console.WriteLine($"Index - FilterCriteria from session - LocationId: {filterCriteria.LocationId}, GuestNumber: {filterCriteria.GuestNumber}, CheckIn: {filterCriteria.CheckInDate}, CheckOut: {filterCriteria.CheckOutDate}");
 
             var viewModel = new HomeViewModel
             {
@@ -39,8 +40,18 @@ namespace AirBB.Controllers
         }
 
         [HttpPost]
-        public IActionResult Filter(FilterCriteria criteria)
+        public IActionResult Filter([Bind(Prefix = "FilterCriteria")] FilterCriteria criteria)
         {
+            // Defensive: ensure criteria is non-null
+            if (criteria == null)
+            {
+                Console.WriteLine("Filter received - criteria is null");
+                criteria = new FilterCriteria();
+            }
+
+            // Debug logging
+            Console.WriteLine($"Filter received - LocationId: {criteria.LocationId}, GuestNumber: {criteria.GuestNumber}, CheckIn: {criteria.CheckInDate}, CheckOut: {criteria.CheckOutDate}");
+
             _sessionManager.SetFilterCriteria(criteria);
             return RedirectToAction("Index");
         }
@@ -105,6 +116,22 @@ namespace AirBB.Controllers
         public IActionResult Reservations()
         {
             var reservations = _sessionManager.GetReservations();
+
+            // Ensure each reservation has its Residence navigation property populated
+            foreach (var res in reservations)
+            {
+                if (res.Residence == null)
+                {
+                    var residence = _context.Residences
+                        .Include(r => r.Location)
+                        .FirstOrDefault(r => r.ResidenceId == res.ResidenceId);
+                    if (residence != null)
+                    {
+                        res.Residence = residence;
+                    }
+                }
+            }
+
             var viewModel = new ReservationListViewModel
             {
                 Reservations = reservations,
@@ -115,11 +142,22 @@ namespace AirBB.Controllers
         }
 
         [HttpPost]
-        public IActionResult CancelReservation(int reservationId)
+        public IActionResult CancelReservation(int reservationId, int residenceId)
         {
             var reservations = _sessionManager.GetReservations();
-            var reservation = reservations.FirstOrDefault(r => r.ReservationId == reservationId);
-            
+
+            // Try to find by reservationId first (if persisted), otherwise fallback to residenceId
+            Reservation? reservation = null;
+            if (reservationId > 0)
+            {
+                reservation = reservations.FirstOrDefault(r => r.ReservationId == reservationId);
+            }
+
+            if (reservation == null && residenceId > 0)
+            {
+                reservation = reservations.FirstOrDefault(r => r.ResidenceId == residenceId);
+            }
+
             if (reservation != null)
             {
                 _sessionManager.RemoveReservation(reservation);
@@ -145,21 +183,27 @@ namespace AirBB.Controllers
 
             var query = _context.Residences.Include(r => r.Location).Include(r => r.Reservations).AsQueryable();
 
-            if (criteria.LocationId.HasValue && criteria.LocationId > 0)
+            // Filter by Location - only if LocationId is specified and greater than 0
+            if (criteria.LocationId.HasValue && criteria.LocationId.Value > 0)
             {
                 query = query.Where(r => r.LocationId == criteria.LocationId.Value);
             }
 
-            if (criteria.GuestNumber.HasValue && criteria.GuestNumber > 0)
+            // Filter by Guest Number - only if GuestNumber is specified and greater than 0
+            if (criteria.GuestNumber.HasValue && criteria.GuestNumber.Value > 0)
             {
                 query = query.Where(r => r.GuestNumber >= criteria.GuestNumber.Value);
             }
 
+            // Filter by Availability dates - only if both dates are specified
             if (criteria.CheckInDate.HasValue && criteria.CheckOutDate.HasValue)
             {
+                var checkIn = criteria.CheckInDate.Value;
+                var checkOut = criteria.CheckOutDate.Value;
+                
                 query = query.Where(r => r.Reservations == null || !r.Reservations.Any(res =>
-                    res.ReservationStartDate < criteria.CheckOutDate.Value &&
-                    res.ReservationEndDate > criteria.CheckInDate.Value));
+                    res.ReservationStartDate < checkOut &&
+                    res.ReservationEndDate > checkIn));
             }
 
             return await query.ToListAsync();

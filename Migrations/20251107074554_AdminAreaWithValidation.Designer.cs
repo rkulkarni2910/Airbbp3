@@ -3,6 +3,7 @@ using System;
 using AirBB.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AirBB.Migrations
 {
     [DbContext(typeof(AirBBContext))]
-    partial class AirBBContextModelSnapshot : ModelSnapshot
+    [Migration("20251107074554_AdminAreaWithValidation")]
+    partial class AdminAreaWithValidation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
@@ -82,16 +85,6 @@ namespace AirBB.Migrations
                         {
                             LocationId = 5,
                             Name = "Los Angeles"
-                        },
-                        new
-                        {
-                            LocationId = 6,
-                            Name = "Seattle"
-                        },
-                        new
-                        {
-                            LocationId = 7,
-                            Name = "Austin"
                         });
                 });
 
@@ -209,32 +202,6 @@ namespace AirBB.Migrations
                             OwnerId = 1,
                             PricePerNight = 200.00m,
                             ResidencePicture = "boston-townhouse.jpg"
-                        },
-                        new
-                        {
-                            ResidenceId = 4,
-                            BathroomNumber = 3m,
-                            BedroomNumber = 4,
-                            BuiltYear = 1995,
-                            GuestNumber = 8,
-                            LocationId = 4,
-                            Name = "Miami Beach House",
-                            OwnerId = 5,
-                            PricePerNight = 300.00m,
-                            ResidencePicture = "miami-beach.jpg"
-                        },
-                        new
-                        {
-                            ResidenceId = 5,
-                            BathroomNumber = 1.5m,
-                            BedroomNumber = 1,
-                            BuiltYear = 2020,
-                            GuestNumber = 3,
-                            LocationId = 5,
-                            Name = "LA Modern Apartment",
-                            OwnerId = 2,
-                            PricePerNight = 180.00m,
-                            ResidencePicture = "la-apartment.jpg"
                         });
                 });
 
@@ -274,8 +241,8 @@ namespace AirBB.Migrations
                         {
                             UserId = 1,
                             DOB = new DateTime(1990, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "john.owner@example.com",
-                            Name = "John PropertyOwner",
+                            Email = "john@example.com",
+                            Name = "John Doe",
                             PhoneNumber = "123-456-7890",
                             SSN = "123-45-6789",
                             UserType = 1
@@ -284,8 +251,8 @@ namespace AirBB.Migrations
                         {
                             UserId = 2,
                             DOB = new DateTime(1985, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "sarah.owner@example.com",
-                            Name = "Sarah EstateManager",
+                            Email = "jane@example.com",
+                            Name = "Jane Smith",
                             PhoneNumber = "234-567-8901",
                             SSN = "234-56-7890",
                             UserType = 1
@@ -294,7 +261,7 @@ namespace AirBB.Migrations
                         {
                             UserId = 3,
                             DOB = new DateTime(1980, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "admin@airbb.com",
+                            Email = "admin@example.com",
                             Name = "Admin User",
                             PhoneNumber = "345-678-9012",
                             SSN = "345-67-8901",
@@ -305,19 +272,10 @@ namespace AirBB.Migrations
                             UserId = 4,
                             DOB = new DateTime(1995, 3, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "client@example.com",
-                            Name = "Regular Client",
+                            Name = "Client User",
                             PhoneNumber = "456-789-0123",
                             SSN = "456-78-9012",
                             UserType = 0
-                        },
-                        new
-                        {
-                            UserId = 5,
-                            DOB = new DateTime(1988, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "mike.owner@example.com",
-                            Name = "Mike HouseOwner",
-                            SSN = "567-89-0123",
-                            UserType = 1
                         });
                 });
 
